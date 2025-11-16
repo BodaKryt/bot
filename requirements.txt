@@ -1,0 +1,4 @@
+python-telegram-bot[async]==20.8
+fastapi
+uvicorn[standard]
+pydantic
