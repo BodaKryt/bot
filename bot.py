@@ -7,6 +7,7 @@ import re
 import matplotlib.pyplot as plt
 import pandas as pd
 import random
+from fastapi import FastAPI, Request
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import textwrap
@@ -38,6 +39,8 @@ POSTS_DB_FILE = os.getenv('POSTS_DB_FILE', 'posts.db')
 SUBSCRIPTIONS_DB_FILE = os.getenv('SUBSCRIPTIONS_DB_FILE', 'subscriptions.db')
 START_MESSAGE_ID = int(os.getenv('START_MESSAGE_ID', '3'))
 MAX_SKIPPED_IDS = int(os.getenv('MAX_SKIPPED_IDS', '170'))
+
+app = FastAPI()
 
 if not TOKEN:
     raise ValueError("Переменная окружения BOT_TOKEN не установлена!")
@@ -1439,11 +1442,15 @@ def main():
 
     logger.info("Бот запущен")
 
-    # run_polling() САМ инициализирует бота и создаёт цикл
-    application.run_polling(
-        allowed_updates=Update.ALL_TYPES,
-        drop_pending_updates=True  # ← Опционально: сбрасывает старые обновления
-    )
+    @app.post("/")
+async def webhook(request: Request):
+    update = Update.de_json(await request.json(), application.bot)
+    await application.process_update(update)
+    return {"ok": True}
+
+@app.get("/")
+async def health():
+    return {"status": "ok"}
 
 
 if __name__ == "__main__":
