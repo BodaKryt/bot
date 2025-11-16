@@ -1,4 +1,7 @@
-python-telegram-bot[async]==20.8
+python-telegram-bot==20.8
 fastapi
 uvicorn[standard]
-pydantic
+matplotlib
+pandas
+Pillow
+python-dotenv
