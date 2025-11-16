@@ -1,7 +1,1 @@
-python-telegram-bot==20.8
-fastapi
-uvicorn[standard]
-matplotlib
-pandas
-Pillow
-python-dotenv
+
